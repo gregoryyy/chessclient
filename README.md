@@ -27,7 +27,9 @@ This app combines three core components, all executed locally:
    - Local opening and tactics library  
    - Position evaluation and principal variation (PV) display  
    - LLM-based commentary for move understanding  
-   - Automatic blunder detection and exercise generation  
+   - Automatic blunder detection and exercise generation
+
+   Uses npm packages chess.js, chessground and @mlc-ai/web-llm
 
 Everything runs client-side — your browser acts as both engine and coach.
 
@@ -120,11 +122,18 @@ Example output:
 
 3. Install dependencies:
    ```bash
+   npm init -y
+   # runs: npm i chess.js chessground @mlc-ai/web-llm
+   mpm i
+   ```
+
+4. Run server
+   ```bash
    npx vite
    # OR
    python3 -m http.server 8000
    ```
 
-4. Open URL ```https://localhost:8000``` etc.
+5. Open URL ```https://localhost:8000``` etc.
 
 

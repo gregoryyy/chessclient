@@ -1,0 +1,36 @@
+{
+  "name": "chess",
+  "version": "1.0.0",
+  "description": "Chess app to (1) test-drive advanced, fully client-side logic and (2) a very fast prototyping approach using LLM-driven insights on advanced tech concepts.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "serve": "npx http-server public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregoryyy/chessclient.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/gregoryyy/chessclient/issues"
+  },
+  "homepage": "https://github.com/gregoryyy/chessclient#readme",
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.79",
+    "chess.js": "^1.4.0",
+    "chessground": "^9.2.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "rollup": "^4.52.4",
+    "typescript": "^5.9.3"
+  }
+}

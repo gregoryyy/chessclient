@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Checkle: Chess Client</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Chessground styles -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/chessground@9.0.4/assets/chessground.css"
+  />
+
+  <!-- App styles -->
+  <link href="/styles.css" rel="stylesheet" />
+</head>
+
+<body>
+  <header>
+    <h1>Client-Side Chess Coach</h1>
+    <div class="row">
+      <span class="tag" id="engineStatus">Engine: …</span>
+      <span class="tag" id="llmStatus">LLM: …</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left column: board + controls -->
+    <section class="card">
+      <div id="board" style="width:460px;height:460px"></div>
+      <div class="row controls">
+        <button id="newGame">New Game</button>
+        <button id="flip">Flip</button>
+        <button id="takeback">Takeback</button>
+        <button id="bestMove">Ask Engine Move</button>
+        <button id="makeExercise">Make Exercise</button>
+      </div>
+    </section>
+
+    <!-- Right column: data panels -->
+    <section class="grid2">
+      <div class="card">
+        <h3>Opening &amp; Tactics Library</h3>
+        <div id="openingName"><em>—</em></div>
+        <div id="themes" class="row"></div>
+        <hr />
+        <strong>Principal Variation</strong>
+        <div id="pv" class="mono">—</div>
+        <div class="row">
+          <span>Eval:</span><span id="eval">—</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Coach Commentary (WebLLM)</h3>
+        <div id="llmOut">—</div>
+      </div>
+
+      <div class="card wide">
+        <h3>Exercises</h3>
+        <div id="exerciseArea">No exercises yet.</div>
+      </div>
+
+      <div class="card wide">
+        <h3>Log</h3>
+        <div id="log" class="mono"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- App bundle -->
+  <script type="module" src="/bundle.js"></script>
+</body>
+</html>

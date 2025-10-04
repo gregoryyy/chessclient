@@ -15,8 +15,12 @@ This app combines three core components, all executed locally:
 1. **Stockfish.js (WASM)** – a top-tier chess engine compiled to WebAssembly.  
    Provides real-time position evaluation, best-move search, and tactical verification.
 
+   Link: https://github.com/nmrugg/stockfish.js
+
 2. **WebLLM** – an open-source WebGPU-based runtime that executes quantized LLMs directly in the browser (e.g., Phi-3, Llama 3, Mistral).  
    Powers the natural-language “coach” that explains moves and suggests ideas.
+
+   Link: https://webllm.mlc.ai/
 
 3. **JavaScript frontend** – built with plain JS and Web Components (`chessboard-element` + `chess.js`), featuring:  
    - Playable board with drag-and-drop pieces  
@@ -107,16 +111,18 @@ Example output:
    cd chessclient
    ```
 
-2. Add Stockfish build (e.g. from official WASM builds:
+2. Add Stockfish build (e.g. from official WASM builds):
    ```bash
-   cp /path/to/stockfish.js ./stockfish.js
+   cp <js loader> ./stockfish-...js
+   cp <wasm file> ./stockfish-...wasm
    ```
+   There are five available engines, see https://github.com/nmrugg/stockfish.js. Currently, the lite single-threaded version is included.
 
 3. Install dependencies:
    ```bash
    npx vite
    # OR
-   python3 -m http.server
+   python3 -m http.server 8000
    ```
 
 4. Open URL ```https://localhost:8000``` etc.

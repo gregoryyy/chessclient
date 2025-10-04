@@ -120,20 +120,38 @@ Example output:
    ```
    There are five available engines, see https://github.com/nmrugg/stockfish.js. Currently, the lite single-threaded version is included.
 
-3. Install dependencies:
+3. Set up ts environment and dependencies (without package.json / package-lock.json):
    ```bash
    npm init -y
-   # runs: npm i chess.js chessground @mlc-ai/web-llm
-   mpm i
+   npm i --save-dev vite
+   npm pkg set type=module
+   npm pkg set scripts.dev="vite"
+   npm pkg set scripts.build="vite build"
+   npm pkg set scripts.preview="vite preview --open"
+   npm i chess.js chessground @mlc-ai/web-llm
    ```
 
-4. Run server
+   Note: if the package.json exists, setup using:
+   ```
+   npm i
+   ```
+
+4. Build
+5. ```
+   # optimized prod bundle
+   npx vite build
+   # serve built files locally
+   npx vite preview
+   ```
+
+6. Run server
    ```bash
-   npx vite
-   # OR
+   # start dev server with live reload
+   npx run dev / npx vite
+   # no live reload
    python3 -m http.server 8000
    ```
 
-5. Open URL ```https://localhost:8000``` etc.
+7. Open URL ```https://localhost:8000``` etc.
 
 

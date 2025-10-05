@@ -1,0 +1,9 @@
+# uses pip-compile to generate requirements.txt
+trl
+peft
+torch
+transformers>=4.43
+bitsandbytes
+accelerate
+--pre -f https://mlc.ai/wheels mlc-llm-nightly-cpu
+--pre -f https://mlc.ai/wheels mlc-ai-nightly-cpu

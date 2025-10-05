@@ -4,6 +4,7 @@ export type LLMEngine = webllm.MLCEngineInterface;
 
 /** Prefer these if present in this WebLLM build; otherwise pick the first available. */
 const PREFERRED_MODELS = [
+  "Llama-3.1-1B-chess-q4f16_1",
   "Llama-3.1-8B-Instruct-q4f16_1",
   "Llama-3-8B-Instruct-q4f16_1",
   "RedPajama-INCITE-Chat-3B-v1-q4f16_1",

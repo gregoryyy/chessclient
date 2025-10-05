@@ -2,7 +2,7 @@
 
 Chess app to (1) test-drive advanced, fully client-side logic and (2) a very fast prototyping approach using LLM-driven insights on advanced tech concepts.
 
-Idea: Both the Stockfish chess engine and a large language model (LLM) run entirely in the browser — no server calls, no API keys, no data sharing. For IP protection, the code is obfuscated.
+Idea: Both the Stockfish chess engine and a large language model (LLM) run entirely in the browser — no server calls, no API keys, no data sharing.
 
 This project demonstrates how far modern web technology (WebAssembly + WebGPU) can go for AI-driven interactive apps.
 
@@ -31,7 +31,9 @@ This app combines three core components, all executed locally:
 
    Uses npm packages chess.js, chessground and @mlc-ai/web-llm
 
-Everything runs client-side — your browser acts as both engine and coach.
+Everything runs client-side — the browser acts as both chess engine and coach.
+
+In the future, the setup can be used to let the LLM play against itself (to allow AlphaGo style improvement)
 
 ---
 

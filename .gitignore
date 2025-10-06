@@ -1,5 +1,6 @@
 node_modules/
 llm/.venv/
+llm/models/
 llm/requirements.txt
 .vscode/
 **/.DS_Store

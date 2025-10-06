@@ -1,159 +1,122 @@
-# Checkle: Chess Client
+# Checkle: Local Chess + LLM Coach
 
-Chess app to (1) test-drive advanced, fully client-side logic and (2) a very fast prototyping approach using LLM-driven insights on advanced tech concepts.
-
-Idea: Both the Stockfish chess engine and a large language model (LLM) run entirely in the browser — no server calls, no API keys, no data sharing.
-
-This project demonstrates how far modern web technology (WebAssembly + WebGPU) can go for AI-driven interactive apps.
+Checkle is an entirely client-side chess laboratory that couples a WebAssembly build of Stockfish with a browser-run large language model. The goal is to explore fast prototyping workflows where strategic insights, tutoring, and experimentation all happen without servers or API keys.
 
 ---
 
-## Overview
+## Motivation
 
-This app combines three core components, all executed locally:
-
-1. **Stockfish.js (WASM)** – a top-tier chess engine compiled to WebAssembly.  
-   Provides real-time position evaluation, best-move search, and tactical verification.
-
-   Link: https://github.com/nmrugg/stockfish.js
-
-2. **WebLLM** – an open-source WebGPU-based runtime that executes quantized LLMs directly in the browser (e.g., Phi-3, Llama 3, Mistral).  
-   Powers the natural-language “coach” that explains moves and suggests ideas.
-
-   Link: https://webllm.mlc.ai/
-
-3. **JavaScript frontend** – built with plain JS and Web Components (`chessboard-element` + `chess.js`), featuring:  
-   - Playable board with drag-and-drop pieces  
-   - Local opening and tactics library  
-   - Position evaluation and principal variation (PV) display  
-   - LLM-based commentary for move understanding  
-   - Automatic blunder detection and exercise generation
-
-   Uses npm packages chess.js, chessground and @mlc-ai/web-llm
-
-Everything runs client-side — the browser acts as both chess engine and coach.
-
-In the future, the setup can be used to let the LLM play against itself (to allow AlphaGo style improvement)
+- **All-local experience** – move analysis, coaching, and evaluation run in the browser via WebAssembly and WebGPU.
+- **Rapid iteration** – the app doubles as a sandbox for testing prompt engineering, PEFT adapters, and custom quantized models.
+- **Privacy by default** – no network round-trips for play or analysis; your games stay on the device.
 
 ---
 
-## Features
+## Feature Highlights
 
-- Play against yourself or analyze positions freely  
-- Stockfish in WASM – fast, no server dependency  
-- Local LLM commentary using [WebLLM](https://webllm.mlc.ai)  
-  - Explains move ideas, missed plans, and tactical motifs  
-  - Summarizes critical positions in natural language  
-- Real-time analysis  
-  - Engine evaluation (centipawns or mate)
-  - Principal variation (best line)
-- Mini opening library (ECO-style identification)
-- Tactics motif panel with standard patterns
-- Blunder detection  
-  - Detects major eval drops  
-  - Stores recent blunders as training puzzles
-- Exercise generation  
-  - Automatically creates puzzles from your own mistakes  
-  - Shows side-to-move, best line, and evaluation swing
-- Offline, private, zero API usage
+- Play, analyze, or step through custom positions with an interactive board powered by `chess.js` and `chessground`.
+- Embedded Stockfish (single-thread WASM build) supplies centipawn/mate evaluations, best-line search, and blunder detection.
+- WebLLM-hosted models provide natural-language commentary, move explanations, and tactical hints.
+- Mistake harvesting turns large evaluation swings into tactics exercises that you can replay immediately.
+- Opening cues, ECO-style labels, and motif panels surface thematic ideas while you explore.
 
 ---
 
-## Architecture
+## System Architecture
 
-| Component | Technology | Role |
-|------------|-------------|------|
-| UI / Logic | Plain JS + `chess.js` + `chessboard-element` | Game rules, moves, and board rendering |
-| Engine | `stockfish.wasm` / `stockfish.js` | Position evaluation and move search |
-| AI Commentary | `@mlc-ai/web-llm` (WebGPU) | Natural language reasoning on top of engine data |
-| Storage | IndexedDB (future) | Save games, exercises, cached models |
-| Deployment | Static HTML + JS | Runs on any HTTPS host (or localhost) |
+| Layer | Tech | Responsibility |
+| --- | --- | --- |
+| UI & Game Logic | Vanilla JS, `chess.js`, `chessground`, custom Web Components | Move validation, board rendering, history tracking |
+| Chess Engine | `stockfish.js` (WASM build) | Fast evaluation, search, PV generation |
+| LLM Runtime | `@mlc-ai/web-llm` on WebGPU | Coach responses, natural language summarization |
+| Data Flow | Web Workers & `postMessage` | Keeps engine/LLM work off the main thread |
+| Bundling | Vite | Local dev server and production build |
 
-The engine and LLM communicate asynchronously via Web Workers.  
-LLM prompts are constructed from engine data (FEN, evaluation deltas, principal variation).
-
----
-
-## Example Prompt (for the LLM)
-
-You are a concise chess coach.
-Before FEN: r1bqkbnr/pppppppp/2n5/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 2 2
-After FEN: r1bqkbnr/pppppppp/2n5/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 2
-Move played (SAN): e4
-Engine eval before: 0.00, after: +0.25, delta: +0.25
-Engine best move: e4
-Engine PV: e4 e5 Nf3 Nc6
-Explain the move in 2 sentences: What’s the idea behind e4?
-
-
-Example output:
-
-> White stakes a claim in the center and opens lines for the bishop and queen.  
-> This is a standard principled move in most openings, creating early activity.
+Prompts sent to the LLM are composed from FEN snapshots, engine evaluations, and principal variations so the coach understands context for each move.
 
 ---
 
-## Design Goals
+## Repository Layout
 
-- Zero backend – all intelligence local  
-- Experimentation platform for:
-  - In-browser reasoning
-  - Human-in-the-loop pattern generation
-  - Offline AI tutoring
-- Composable architecture – easy to extend:
-  - Replace LLM
-  - Add online openings database
-  - Add cloud sync or sharing later
+```
+public/           Static assets, including model bundles
+src/              Frontend source (board, UI glue, prompt construction)
+llm/              Finetuning scripts, LoRA helpers, and docs (see llm/README.md)
+node_modules/     Local dependencies (installed via npm)
+```
 
 ---
 
-## Setup
+## Getting Started
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/gregoryyy/chessclient
-   cd chessclient
-   ```
+### Prerequisites
 
-2. Add Stockfish build (e.g. from official WASM builds):
-   ```bash
-   cp <js loader> ./stockfish-...js
-   cp <wasm file> ./stockfish-...wasm
-   ```
-   There are five available engines, see https://github.com/nmrugg/stockfish.js. Currently, the lite single-threaded version is included.
+- Node.js 18+
+- Python 3.11+ (needed for LoRA training scripts and MLC tooling)
 
-3. Set up ts environment and dependencies (without package.json / package-lock.json):
-   ```bash
-   npm init -y
-   npm i --save-dev vite
-   npm pkg set type=module
-   npm pkg set scripts.dev="vite"
-   npm pkg set scripts.build="vite build"
-   npm pkg set scripts.preview="vite preview --open"
-   npm i chess.js chessground @mlc-ai/web-llm
-   ```
+### Install & Run
 
-   Note: if the package.json exists, setup using:
-   ```
-   npm i
-   ```
+```bash
+# clone the repo
+git clone https://github.com/gregoryyy/chessclient
+cd chessclient
 
-4. Build
-5. ```
-   # optimized prod bundle
-   npx vite build
-   # serve built files locally
-   npx vite preview
-   ```
+# install npm dependencies
+npm install
 
-6. Run server
-   ```bash
-   # start dev server with live reload
-   npx run dev / npx vite
-   # no live reload
-   python3 -m http.server 8000
-   ```
+# start the dev server
+npm run dev
+```
 
-7. Open URL ```https://localhost:8000``` etc.
+The dev server launches Vite on `http://localhost:5173` (or the next free port). Open the URL in a WebGPU-capable browser (Chrome, Edge, or Safari Technology Preview).
 
+### Production Build
+
+```bash
+npm run build        # produces dist/ assets
+npm run preview      # serves the production bundle locally
+```
+
+---
+
+## Stockfish Assets
+
+The repository ships with a light WASM build. To swap or upgrade engines, download an alternative from [stockfish.js](https://github.com/nmrugg/stockfish.js) and place the loader/wasm pair in `public/engines`, then update the import path in `src/llm.ts`.
+
+---
+
+## Working with LLMs
+
+WebLLM expects models compiled by the MLC toolchain. To add or replace models:
+
+1. Finetune (optional) using the LoRA workflow detailed in `llm/README.md`.
+2. Run `mlc_llm convert`, `mlc_llm quantize`, and `mlc_llm build-web` to emit the WebGPU bundle.
+3. Host the generated files under `public/models/<model-id>` and register the model in `src/llm.ts`.
+
+Models load lazily in the browser; progress is surfaced via the UI so users know when the coach is ready.
+
+---
+
+## Development Tips
+
+- Keep multiple engines/LLM configs handy; switching between them helps compare coaching styles and latency.
+- Use the browser devtools console to watch WebLLM download and compilation logs when debugging model initialization.
+- `npm run lint` and `npm run build` are useful sanity checks before shipping changes.
+
+---
+
+## Roadmap Ideas
+
+- Reinforcement-style self-play loops to generate dynamic training data.
+- IndexedDB caching for models, games, and tactics history.
+- Multiplayer or remote evaluation fallbacks for low-end devices.
+- Expanded library of quantized models tuned for chess analysis.
+
+---
+
+## Acknowledgements
+
+- [Stockfish.js](https://github.com/nmrugg/stockfish.js) for the WebAssembly engine.
+- [WebLLM](https://webllm.mlc.ai/) and the MLC team for pushing WebGPU inference forward.
+- Open-source chess tooling (`chess.js`, `chessground`, and community datasets) that make rapid experimentation possible.
 
